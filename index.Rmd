@@ -18,8 +18,10 @@ work_index3 <- work_index[ , c(1,2,5:7)]
 dist_in_work=dist(work_index3[,-c(1,2)])
 ```
 
+
 ```{r}
-install.packages("usmap")
+library(scales)
+
 library(usmap)
 library(cluster)
 cluster= cluster::pam(x=dist_in_work,
@@ -34,8 +36,9 @@ work_index3$cluster <- as.factor(work_index3$cluster)
 
 subtext="Where 1 Indicates Worst for Workers, and 4 is the Best"
 
+library(ggplot2)
 
-plot_usmap(data = work_index3, values = "cluster",na.rm=TRUE, color="azure4")+ scale_fill_brewer(palette='RdYlBu')+ labs(title = "Best States to Work on a Scale of 1 to 4",subtitle = subtext)+ theme(legend.title=element_blank())
+plot_usmap(data = work_index3, values = "cluster",na.rm=TRUE, color="azure4")+scale_fill_brewer(palette='RdYlBu')+ labs(title = "Best States to Work on a Scale of 1 to 4",subtitle = subtext)+ theme(legend.title=element_blank())
 ```
 
 ```{r}
@@ -44,17 +47,4 @@ work1 <- plot_usmap(data = work_index3, values = "cluster",na.rm=TRUE, color="az
 ##Final Map
 work2=work1+theme(plot.title = element_text(hjust = .5,face="bold",size = 14),plot.subtitle = element_text(hjust = .5,face="italic"))
 work2
-```
-
-```{r}
-
-plot_usmap(data = work_index3, values = "cluster",na.rm=TRUE, color="azure4")+ scale_fill_manual(values=c("dark red","tomato","purple","blue3"))+ labs(title = "Best States to Work on a Scale of 1 to 4, (4=best)")+ theme(legend.title=element_blank())
-                                                                                             
-                                                                                  
-                                                                                             
-plot_usmap(data = work_index, values = "Overall.Index.Score", color = "azure4") + 
-  scale_fill_continuous(
-    low = "dark red", high = "blue3", name = "Best States to Work", label = scales::comma
-  ) + theme(legend.position = "right")
-
 ```
