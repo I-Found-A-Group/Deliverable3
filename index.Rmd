@@ -1,0 +1,76 @@
+---
+title: "Deliverable3Draft"
+author: "tallis"
+date: "2023-02-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+read.csv("Copy of best-states-to-work-index-2022.csv")
+work_index <- read.csv("Copy of best-states-to-work-index-2022.csv")
+work_index3 <- work_index[ , c(1,2,5:7)]
+
+dist_in_work=dist(work_index3[,-c(1,2)])
+```
+
+
+```{r}
+library(scales)
+
+library(usmap)
+library(cluster)
+cluster= cluster::pam(x=dist_in_work,
+              k = 4, cluster.only = F)
+work_index3$cluster <- cluster$clustering
+
+work_index3$state <- work_index3$State
+
+work_index$state <- work_index$State
+
+work_index3$cluster <- as.factor(work_index3$cluster)
+
+subtext="Where 1 Indicates Worst for Workers, and 4 is the Best"
+
+library(ggplot2)
+
+plot_usmap(data = work_index3, values = "cluster",na.rm=TRUE, color="azure4")+scale_fill_brewer(palette='RdYlBu')+ labs(title = "Best States to Work on a Scale of 1 to 4",subtitle = subtext)+ theme(legend.title=element_blank())
+```
+
+```{r}
+
+aggregate(data=work_index3,
+          cbind(Wage.Dimension.Score,Worker.Protection.Dimension.Score,Right.to.Organize.Dimension.Score)~cluster,
+          FUN=mean)
+
+library(dplyr)
+
+work_index3$cluster=dplyr::recode_factor(work_index3$cluster, 
+                  `1`='1',`2` = '2',`4`='3',`3`='4',.ordered = T)
+
+work1 <- plot_usmap(data = work_index3, values = "cluster",na.rm=TRUE, color="azure4")+ scale_fill_brewer(palette='RdYlBu')+ labs(title = "Best States to Work on a Scale of 1 to 4",subtitle = subtext)+ theme(legend.title=element_blank())
+
+plot_usmap(data = work_index, values = "Overall.Index.Score", color = "azure4") + 
+  scale_fill_continuous(
+    low = "dark red", high = "blue3", name = "Best States to Work", label = scales::comma
+  ) + theme(legend.position = "right")
+
+
+
+##Final Map
+work2=work1+theme(plot.title = element_text(hjust = .5,face="bold",size = 14),plot.subtitle = element_text(hjust = .5,face="italic"))
+work2
+```
+<<<<<<< HEAD:Deliverable3Draft.Rmd
+
+```{r}
+
+
+
+```
+=======
+>>>>>>> 29d62f81db1f79d05c3523129d0ae0dbecdcaca4:index.Rmd
