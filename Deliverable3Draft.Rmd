@@ -57,4 +57,13 @@ plot_usmap(data = work_index, values = "Overall.Index.Score", color = "azure4") 
     low = "dark red", high = "blue3", name = "Best States to Work", label = scales::comma
   ) + theme(legend.position = "right")
 
+aggregate(data=work_index3,
+          cbind(Wage.Dimension.Score,Worker.Protection.Dimension.Score,Right.to.Organize.Dimension.Score)~cluster,
+          FUN=mean)
+
+library(dplyr)
+
+work_index3$cluster=dplyr::recode_factor(work_index3$cluster, 
+                  `1`='1',`2` = '2',`4`='3',`3`='4',.ordered = T)
+
 ```
